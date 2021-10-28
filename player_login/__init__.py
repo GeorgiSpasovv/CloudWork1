@@ -33,19 +33,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         enable_cross_partition_query=True
     )
 
-    # db_passw = container.query_items(
-    #     query='SELECT * FROM players p WHERE p.password = @passw',
-    #     parameters=[
-    #         dict(passw='@passw', value=passw)
-    #     ],
-    #     enable_cross_partition_query=True
-    # )
-
-    if db_item is None:
-        return func.HttpResponse("Something terrible happened....")
-        for i, r in enumerate(db_item):
-            db_passw = r.get('password')
-
+    for i, r in enumerate(db_item):
+        db_passw = r.get('password')
         if db_passw == passw:
             return func.HttpResponse(
                 json.dumps({
@@ -55,11 +44,10 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
                 status_code=200
             )
 
-    else:
-        return func.HttpResponse(
-            json.dumps({
-                "result": False,
-                "msg": "Username or password incorrect"
-            }),
+    return func.HttpResponse(
+        json.dumps({
+            "result": False,
+            "msg": "Username or password incorrect"
+        }),
 
-        )
+    )

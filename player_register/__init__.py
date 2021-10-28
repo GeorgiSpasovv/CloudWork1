@@ -1,5 +1,6 @@
 import logging
 import json
+import re
 import azure.functions as func
 import azure.cosmos.cosmos_client as cosmos_client
 from azure.cosmos.exceptions import CosmosHttpResponseError
@@ -19,6 +20,10 @@ def main(req: func.HttpRequest, players: func.Out[func.Document]) -> func.HttpRe
 
     logging.info("The JSON received {}".format(req.get_json()))
     req_body = req.get_json()
+    req_body.update({
+        "games_played": 0,
+        'total_score': 0,
+    })
 
     name = req_body.get('username')
     passw = req_body.get('password')
@@ -63,7 +68,7 @@ def main(req: func.HttpRequest, players: func.Out[func.Document]) -> func.HttpRe
             })
         )
 
-    if same_name != None:
+    for i, r in enumerate(same_name):
         return func.HttpResponse(
             json.dumps({
                 "result": False,
@@ -74,6 +79,7 @@ def main(req: func.HttpRequest, players: func.Out[func.Document]) -> func.HttpRe
     # Inserting an account into cosmos
     try:
         players.set(func.Document.from_dict(req_body))
+
     except CosmosHttpResponseError:
         return func.HttpResponse("Something terrible happened....")
 
