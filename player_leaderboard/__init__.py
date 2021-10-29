@@ -22,34 +22,18 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info("The JSON received {}".format(req.get_json()))
     req_body = req.get_json()
 
-    name = req_body.get('username')
-    passw = req_body.get('password')
+    k = int(req_body.get('top'))
 
     db_item = container.query_items(
-        query='SELECT * FROM players p WHERE p.username = @name',
+        query='SELECT TOP @name p.username, p.total_score, p.games_played FROM players p ORDER BY p.total_score DESC',
         parameters=[
-            dict(name='@name', value=name)
+            dict(name='@name', value=k)
         ],
         enable_cross_partition_query=True
     )
-
+    str = ""
     for i, r in enumerate(db_item):
-        db_passw = r.get('password')
-        if db_passw == passw:
-            return func.HttpResponse(
-                json.dumps({
-                    "result": True,
-                    "msg": "OK"
-                }),
-                mimetype="application/json",
-                status_code=200
-            )
+        str = str + ", " + json.dumps(r)
 
-    return func.HttpResponse(
-        json.dumps({
-            "result": False,
-            "msg": "Username or password incorrect"
-        }),
-        mimetype="application/json"
-
-    )
+    str = "[" + str + "]"
+    return func.HttpResponse(str)

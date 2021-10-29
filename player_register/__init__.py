@@ -40,7 +40,8 @@ def main(req: func.HttpRequest, players: func.Out[func.Document]) -> func.HttpRe
             json.dumps({
                 "result": False,
                 "msg": "Username less than 4 characters"
-            })
+            }),
+            mimetype="application/json"
         )
 
     if len(name) > 16:
@@ -48,7 +49,8 @@ def main(req: func.HttpRequest, players: func.Out[func.Document]) -> func.HttpRe
             json.dumps({
                 "result": False,
                 "msg": "Username more than 16 characters"
-            })
+            }),
+            mimetype="application/json"
         )
 
     if len(passw) < 8:
@@ -56,7 +58,8 @@ def main(req: func.HttpRequest, players: func.Out[func.Document]) -> func.HttpRe
             json.dumps({
                 "result": False,
                 "msg": "Password less than 8 characters"
-            })
+            }),
+            mimetype="application/json"
         )
 
     if len(passw) > 24:
@@ -64,7 +67,8 @@ def main(req: func.HttpRequest, players: func.Out[func.Document]) -> func.HttpRe
             json.dumps({
                 "result": False,
                 "msg": "Password more than 24 characters"
-            })
+            }),
+            mimetype="application/json"
         )
 
     for i, r in enumerate(same_name):
@@ -72,7 +76,8 @@ def main(req: func.HttpRequest, players: func.Out[func.Document]) -> func.HttpRe
             json.dumps({
                 "result": False,
                 "msg": "Username already exists"
-            })
+            }),
+            mimetype="application/json"
         )
 
     # Inserting an account into cosmos
@@ -87,5 +92,6 @@ def main(req: func.HttpRequest, players: func.Out[func.Document]) -> func.HttpRe
             "result": True,
             "msg": "OK"
         }),
+        mimetype="application/json",
         status_code=200
     )

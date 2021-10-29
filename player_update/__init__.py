@@ -44,6 +44,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
                             "result": False,
                             "msg": "Attempt to set negative score/games_played"
                         }),
+                        mimetype="application/json"
 
                     )
 
@@ -57,6 +58,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
                             "result": False,
                             "msg": "Attempt to set negative score/games_played"
                         }),
+                        mimetype="application/json"
 
                     )
                 else:
@@ -68,6 +70,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
                     "result": True,
                     "msg": "OK"
                 }),
+                mimetype="application/json",
                 status_code=200
             )
 
@@ -77,6 +80,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
                     "result": False,
                     "msg": "wrong password"
                 }),
+                mimetype="application/json"
 
             )
 
@@ -85,5 +89,6 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             "result": False,
             "msg": "user does not exist"
         }),
+        mimetype="application/json"
 
     )
