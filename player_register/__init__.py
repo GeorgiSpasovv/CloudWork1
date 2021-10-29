@@ -1,6 +1,5 @@
 import logging
 import json
-import re
 import azure.functions as func
 import azure.cosmos.cosmos_client as cosmos_client
 from azure.cosmos.exceptions import CosmosHttpResponseError
