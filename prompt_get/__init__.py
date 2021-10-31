@@ -25,30 +25,31 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
     logging.info("The JSON received {}".format(req.get_json()))
     req_body = req.get_json()
-    n = req_body.get('n')
-
-    items = container.query_items(
-        query='SELECT p.id_p, p.text, p.username FROM prompts p',
-        enable_cross_partition_query=True
-    )
-
-    random_numbers = set()
-    items_list = []
-    for row in items:
-        items_list.append(row)
+    inputt = req_body.get('players')
 
     strr = ""
-    i = 0
-    if n > len(items_list):
-        n = len(items_list)
+    if inputt == -1:
+        items = container.query_items(
+            query='SELECT p.id_p, p.text, p.username FROM prompts p',
+            enable_cross_partition_query=True
+        )
 
-    while i < n:
-        k = random.randint(0, len(items_list)-1)
-        if k not in random_numbers:
-            strr = strr + json.dumps(format_json(items_list[k])) + ", "
-            random_numbers.add(k)
-            i += 1
+        for row in items:
+            strr = strr + json.dumps(format_json(row)) + ", "
+
+    else:
+
+        for name in inputt:
+            items = container.query_items(
+                query='SELECT p.id_p, p.text, p.username FROM prompts p WHERE p.username = @name',
+                parameters=[
+                    dict(name='@name', value=name)
+                ],
+                enable_cross_partition_query=True
+            )
+
+            for row in items:
+                strr = strr + json.dumps(format_json(row)) + ", "
 
     strr = "[" + strr + "]"
-
     return func.HttpResponse(strr)

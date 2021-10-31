@@ -1,7 +1,5 @@
 import logging
 import json
-
-from azure.core.tracing.decorator import distributed_trace
 import azure.functions as func
 import azure.cosmos.cosmos_client as cosmos_client
 from azure.cosmos.exceptions import CosmosHttpResponseError
@@ -35,8 +33,8 @@ def main(req: func.HttpRequest, prompts: func.Out[func.Document]) -> func.HttpRe
         enable_cross_partition_query=True
     )
 
-    for i, r in enumerate(db_user):
-        db_passw = r.get('password')
+    for row in db_user:
+        db_passw = row.get('password')
         if db_passw == passw:
             status = True
 
@@ -67,7 +65,7 @@ def main(req: func.HttpRequest, prompts: func.Out[func.Document]) -> func.HttpRe
             enable_cross_partition_query=True
         )
 
-        for i, r in enumerate(db_prompt):
+        for line in db_prompt:
             return func.HttpResponse(
                 json.dumps({
                     "result": False,
@@ -83,7 +81,7 @@ def main(req: func.HttpRequest, prompts: func.Out[func.Document]) -> func.HttpRe
 
         id_p = 1
 
-        for i, r in enumerate(db_el):
+        for r in db_el:
             id_p = r.get('id_p') + 1
 
         # Inserting a prompt into cosmos
@@ -108,12 +106,11 @@ def main(req: func.HttpRequest, prompts: func.Out[func.Document]) -> func.HttpRe
             status_code=200
         )
 
-    else:
-        return func.HttpResponse(
-            json.dumps({
-                "result": False,
-                "msg": "bad username or password"
-            }),
-            mimetype="application/json"
+    return func.HttpResponse(
+        json.dumps({
+            "result": False,
+            "msg": "bad username or password"
+        }),
+        mimetype="application/json"
 
-        )
+    )

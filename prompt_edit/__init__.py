@@ -1,10 +1,7 @@
 import logging
 import json
-
-from azure.core.tracing.decorator import distributed_trace
 import azure.functions as func
 import azure.cosmos.cosmos_client as cosmos_client
-from azure.cosmos.exceptions import CosmosHttpResponseError
 import os
 
 
@@ -35,8 +32,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         enable_cross_partition_query=True
     )
 
-    for i, r in enumerate(db_check_user):
-        db_passw = r.get('password')
+    for row in db_check_user:
+        db_passw = row.get('password')
         if db_passw == passw:
             status = True
 
@@ -49,7 +46,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             enable_cross_partition_query=True
         )
 
-        for i, r in enumerate(db_check_id):
+        for row in db_check_id:
 
             if len(text) < 10:
                 return func.HttpResponse(
@@ -78,7 +75,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
                 enable_cross_partition_query=True
             )
 
-            for j, l in enumerate(db_prompt):
+            for line in db_prompt:
                 return func.HttpResponse(
                     json.dumps({
                         "result": False,
@@ -88,8 +85,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
                 )
 
             # Updating prompt
-            r['text'] = text
-            container2.upsert_item(r)
+            row['text'] = text
+            container2.upsert_item(row)
             return func.HttpResponse(
                 json.dumps({
                     "result": True,
@@ -108,12 +105,11 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
         )
 
-    else:
-        return func.HttpResponse(
-            json.dumps({
-                "result": False,
-                "msg": "bad username or password"
-            }),
-            mimetype="application/json"
+    return func.HttpResponse(
+        json.dumps({
+            "result": False,
+            "msg": "bad username or password"
+        }),
+        mimetype="application/json"
 
-        )
+    )

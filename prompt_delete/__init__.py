@@ -1,10 +1,7 @@
 import logging
 import json
-
-from azure.core.tracing.decorator import distributed_trace
 import azure.functions as func
 import azure.cosmos.cosmos_client as cosmos_client
-from azure.cosmos.exceptions import CosmosHttpResponseError
 import os
 
 
@@ -34,8 +31,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         enable_cross_partition_query=True
     )
 
-    for i, r in enumerate(db_check_user):
-        db_passw = r.get('password')
+    for row in db_check_user:
+        db_passw = row.get('password')
         if db_passw == passw:
             status = True
 
@@ -49,8 +46,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             enable_cross_partition_query=True
         )
 
-        for i, r in enumerate(db_check_id):
-            container2.delete_item(r, r.get('id'))
+        for line in db_check_id:
+            container2.delete_item(line, line.get('id'))
             return func.HttpResponse(
                 json.dumps({
                     "result": True,
@@ -69,12 +66,11 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
         )
 
-    else:
-        return func.HttpResponse(
-            json.dumps({
-                "result": False,
-                "msg": "bad username or password"
-            }),
-            mimetype="application/json"
+    return func.HttpResponse(
+        json.dumps({
+            "result": False,
+            "msg": "bad username or password"
+        }),
+        mimetype="application/json"
 
-        )
+    )
