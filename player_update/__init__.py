@@ -33,8 +33,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         enable_cross_partition_query=True
     )
 
-    for i, r in enumerate(db_item):
-        db_passw = r.get('password')
+    for row in db_item:
+        db_passw = row.get('password')
         if db_passw == passw:
 
             if add_to_games_played:
@@ -49,7 +49,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
                     )
 
                 else:
-                    r['games_played'] += int(add_to_games_played)
+                    row['games_played'] += int(add_to_games_played)
 
             if add_to_score:
                 if int(add_to_score) < 0:
@@ -62,9 +62,9 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
                     )
                 else:
-                    r['total_score'] += int(add_to_score)
+                    row['total_score'] += int(add_to_score)
 
-            container.upsert_item(r)
+            container.upsert_item(row)
             return func.HttpResponse(
                 json.dumps({
                     "result": True,

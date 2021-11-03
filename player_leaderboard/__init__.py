@@ -25,15 +25,17 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     k = int(req_body.get('top'))
 
     db_item = container.query_items(
-        query='SELECT TOP @name p.username, p.total_score, p.games_played FROM players p ORDER BY p.total_score DESC',
+        query='SELECT TOP @name p.username, p.total_score, p.games_played FROM players p',
         parameters=[
             dict(name='@name', value=k)
         ],
         enable_cross_partition_query=True
     )
-    str = ""
-    for i, r in enumerate(db_item):
-        str = str + ", " + json.dumps(r)
 
-    str = "[" + str + "]"
-    return func.HttpResponse(str)
+    list1 = []
+    for row in db_item:
+        list1.append(row)
+
+    list2 = json.dumps(
+        sorted(list1, key=lambda d: (-d['total_score'], d['username'])))
+    return func.HttpResponse(list2)

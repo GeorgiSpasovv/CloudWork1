@@ -37,7 +37,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     for row in items:
         items_list.append(row)
 
-    strr = ""
+    list1 = []
     i = 0
     if n > len(items_list):
         n = len(items_list)
@@ -45,10 +45,9 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     while i < n:
         k = random.randint(0, len(items_list)-1)
         if k not in random_numbers:
-            strr = strr + json.dumps(format_json(items_list[k])) + ", "
+            list1.append(items_list[k])
             random_numbers.add(k)
             i += 1
 
-    strr = "[" + strr + "]"
-
-    return func.HttpResponse(strr)
+    list2 = json.dumps(list1)
+    return func.HttpResponse(list2)

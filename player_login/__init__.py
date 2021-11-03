@@ -33,8 +33,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         enable_cross_partition_query=True
     )
 
-    for i, r in enumerate(db_item):
-        db_passw = r.get('password')
+    for row in db_item:
+        db_passw = row.get('password')
         if db_passw == passw:
             return func.HttpResponse(
                 json.dumps({

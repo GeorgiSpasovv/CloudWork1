@@ -71,7 +71,7 @@ def main(req: func.HttpRequest, players: func.Out[func.Document]) -> func.HttpRe
             mimetype="application/json"
         )
 
-    for i, r in enumerate(same_name):
+    for row in same_name:
         return func.HttpResponse(
             json.dumps({
                 "result": False,

@@ -27,7 +27,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     req_body = req.get_json()
     inputt = req_body.get('players')
 
-    strr = ""
+    list1 = []
     if inputt == -1:
         items = container.query_items(
             query='SELECT p.id_p, p.text, p.username FROM prompts p',
@@ -35,10 +35,9 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         )
 
         for row in items:
-            strr = strr + json.dumps(format_json(row)) + ", "
+            list1.append(row)
 
     else:
-
         for name in inputt:
             items = container.query_items(
                 query='SELECT p.id_p, p.text, p.username FROM prompts p WHERE p.username = @name',
@@ -49,7 +48,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             )
 
             for row in items:
-                strr = strr + json.dumps(format_json(row)) + ", "
+                list1.append(row)
 
-    strr = "[" + strr + "]"
-    return func.HttpResponse(strr)
+    list2 = json.dumps(list1)
+    return func.HttpResponse(list2)
