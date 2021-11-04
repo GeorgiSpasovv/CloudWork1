@@ -16,6 +16,13 @@ database = client.get_database_client('Quiplash')
 container = database.get_container_client('players')
 
 
+def format_json(n):
+    n["username"] = n.pop("username")
+    n["score"] = n.pop("total_score")
+    n["games_played"] = n.pop("games_played")
+    return n
+
+
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
@@ -34,8 +41,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     list1 = []
     for row in db_item:
-        list1.append(row)
+        list1.append(format_json(row))
 
     list2 = json.dumps(
-        sorted(list1, key=lambda d: (-d['total_score'], d['username'])))
+        sorted(list1, key=lambda d: (-d['score'], d['username'])))
     return func.HttpResponse(list2)

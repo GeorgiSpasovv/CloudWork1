@@ -38,7 +38,9 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         if db_passw == passw:
 
             if add_to_games_played:
-                if int(add_to_games_played) < 0:
+                row['games_played'] += int(add_to_games_played)
+
+                if int(row['games_played']) < 0:
                     return func.HttpResponse(
                         json.dumps({
                             "result": False,
@@ -48,21 +50,41 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
                     )
 
-                else:
-                    row['games_played'] += int(add_to_games_played)
+                # if int(add_to_games_played) < 0:
+                #     return func.HttpResponse(
+                #         json.dumps({
+                #             "result": False,
+                #             "msg": "Attempt to set negative score/games_played"
+                #         }),
+                #         mimetype="application/json"
+
+                #     )
+
+                # else:
+                #     row['games_played'] += int(add_to_games_played)
 
             if add_to_score:
-                if int(add_to_score) < 0:
+                row['total_score'] += int(add_to_score)
+
+                if int(row['total_score']) < 0:
                     return func.HttpResponse(
                         json.dumps({
                             "result": False,
                             "msg": "Attempt to set negative score/games_played"
                         }),
                         mimetype="application/json"
-
                     )
-                else:
-                    row['total_score'] += int(add_to_score)
+                # if int(add_to_score) < 0:
+                #     return func.HttpResponse(
+                #         json.dumps({
+                #             "result": False,
+                #             "msg": "Attempt to set negative score/games_played"
+                #         }),
+                #         mimetype="application/json"
+
+                #     )
+                # else:
+                #     row['total_score'] += int(add_to_score)
 
             container.upsert_item(row)
             return func.HttpResponse(

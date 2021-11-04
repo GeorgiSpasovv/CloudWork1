@@ -45,7 +45,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     while i < n:
         k = random.randint(0, len(items_list)-1)
         if k not in random_numbers:
-            list1.append(items_list[k])
+            list1.append(format_json(items_list[k]))
             random_numbers.add(k)
             i += 1
 

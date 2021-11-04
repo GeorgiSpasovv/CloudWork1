@@ -35,7 +35,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         )
 
         for row in items:
-            list1.append(row)
+            list1.append(format_json(row))
 
     else:
         for name in inputt:
@@ -48,7 +48,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             )
 
             for row in items:
-                list1.append(row)
+                list1.append(format_json(row))
 
     list2 = json.dumps(list1)
     return func.HttpResponse(list2)

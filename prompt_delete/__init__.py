@@ -37,8 +37,9 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             status = True
 
     if status:
+        logging.info('Username and password correct')
         db_check_id = container2.query_items(
-            query='SELECT * FROM prompts p WHERE p.id_p = @id AND p.username = @name',
+            query='SELECT * FROM prompts p WHERE p.id_p = @id',
             parameters=[
                 dict(name='@id', value=id_p),
                 dict(name='@name', value=name)

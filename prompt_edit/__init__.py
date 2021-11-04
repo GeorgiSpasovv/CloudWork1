@@ -67,7 +67,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
                 )
 
             db_prompt = container2.query_items(
-                query='SELECT * FROM prompts p WHERE p.text = @text AND p.username = @name',
+                query='SELECT * FROM prompts p WHERE p.text = @text',
                 parameters=[
                     dict(name='@text', value=text),
                     dict(name='@name', value=name)
